@@ -26,9 +26,9 @@ const studentSchema = new mongoose.Schema(
       type: Number,
       required: [true, "student level required"],
     },
-    section: {
-      type: String,
-      enum: ["A", "B", "C", "D", "E", "F"],
+    class: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Class",
     },
     studentPhone: {
       type: Number,

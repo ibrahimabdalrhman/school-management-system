@@ -1,4 +1,7 @@
 const asyncHander = require("express-async-handler");
+const fs = require('fs');
+const path = require('path');
+const ApiError = require('../utils/ApiError');
 
 exports.getAll = (Model) => 
   asyncHander(async (req, res) => {
@@ -26,8 +29,28 @@ exports.updateOne = (Model) =>
     res.json(model);
   });
 
+const deleteImg = (imageName) => {
+  const imageurl = path.join(__dirname, "uploads", "students", imageName);
+  console.log("=> ", imageurl);
+
+  fs.unlink(imageurl, (err, next) => {
+    if (err) {
+      console.error();
+      return next(
+        new ApiError(`Error deleting image ${imageName}: ${err}`, 500)
+      );
+    }
+  });
+};
+
 exports.deleteOne = (Model) =>
   asyncHander(async (req, res) => {
+    const modelToGetImg = await Model.findById(req.params.id);
+    console.log("=> ", modelToGetImg.image);
+    if (modelToGetImg.image) {
+      deleteImg(modelToGetImg.image)
+    }
+
     const model = await Model.findByIdAndDelete(req.params.id);
     res.json({ status: 'success' });
   });
