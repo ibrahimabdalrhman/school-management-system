@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const classController = require("../controllers/classController");
+const { auth } = require('../controllers/authController');
 
+router.use(auth);
 
 router
   .route("/")
